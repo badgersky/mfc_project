@@ -46,6 +46,8 @@ CExcept1App::CExcept1App()
 {
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
+	ptrWnd = NULL;
+	ptrDat = NULL;
 }
 
 
@@ -61,4 +63,34 @@ BOOL CExcept1App::InitInstance()
 	CWinApp::InitInstance();
 
 	return TRUE;
+}
+
+void CExcept1App::PutMessage(UINT ID_Message)
+{
+    HINSTANCE hInstance = GetModuleHandleA(NULL);
+    char str[1024];
+    int ret = LoadStringA(hInstance, ID_Message, str, sizeof(str));
+    if (ptrWnd)
+        ptrWnd->SendMessage(WM_DIS_MSG, (WPARAM)str, (LPARAM)ptrDat);
+
+    else if (!ptrWnd && str[0] == 'E')
+    {
+        CString sstr(str);
+        AfxMessageBox(sstr);
+        UINT uExitCode = 0;
+        HANDLE hHadle = GetCurrentProcess();
+        TerminateProcess(GetCurrentProcess(), uExitCode);
+    }
+}
+
+void CExcept1App::ClearOutWnd()
+{
+    if (ptrWnd)
+        ptrWnd->SendMessage(WM_CLEAR_OUTPUT, 0, 0);
+}
+
+extern "C" CExcept1App * PASCAL EXPORT GetExceptPtr()
+{
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    return &theApp;
 }

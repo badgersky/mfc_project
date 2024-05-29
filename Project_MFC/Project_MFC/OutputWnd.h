@@ -6,11 +6,11 @@
 
 class COutputList : public CListBox
 {
-// Construction
+	// Construction
 public:
 	COutputList() noexcept;
 
-// Implementation
+	// Implementation
 public:
 	virtual ~COutputList();
 
@@ -30,6 +30,9 @@ public:
 	COutputWnd() noexcept;
 
 	void UpdateFonts();
+
+	void PutOutputInfo(CString& str) { m_wndOutputBuild.AddString(str); }
+	void ClearAll() { m_wndOutputBuild.ResetContent(); }
 
 // Attributes
 protected:

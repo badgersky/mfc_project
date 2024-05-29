@@ -51,6 +51,21 @@ CProjectMFCView::~CProjectMFCView()
 {
 }
 
+void CProjectMFCView::OnInitialUpdate()
+{
+	CView::OnInitialUpdate();
+
+	// TODO: Add your specialized code here and/or call the base class
+	CWnd* ptrWnd = this->GetActiveWindow();
+	CProjectMFCDoc* pDoc = GetDocument();
+	if (pDoc && pDoc->pDat)
+	{
+		MyData* pdat = pDoc->pDat;
+		pDoc->pExcept->SetWnd(ptrWnd, pdat);
+		//pDoc->pExcept->ClearOutWnd();
+	}
+}
+
 BOOL CProjectMFCView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying
@@ -100,7 +115,7 @@ void CProjectMFCView::OnDraw(CDC* pDC)
 	size1.cx = (long)(m_scaleX * (rect.right - rect.left));
 	size1.cy = (long)(m_scaleY * (rect.bottom - rect.top));
 
-	newbrush.CreateSolidBrush(RGB(255, 255, 255));
+	newbrush.CreateSolidBrush(RGB(250, 250, 250));
 	oldbrush = pDC->SelectObject(&newbrush);
 	pDC->Rectangle(0, 0, (rect.right - rect.left), (rect.bottom - rect.top));
 	pDC->SelectObject(oldbrush);
@@ -129,7 +144,7 @@ void CProjectMFCView::OnDraw(CDC* pDC)
 		//Draw lines
 		pDC->SelectObject(oldpen);
 		newpen.DeleteObject();
-		newpen.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
+		newpen.CreatePen(PS_SOLID, 2, RGB(69, 69, 69));
 		oldpen = pDC->SelectObject(&newpen);
 
 		if (ipoint == 0)

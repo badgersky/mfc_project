@@ -5,7 +5,7 @@
 #include "pch.h"
 #include "framework.h"
 #include "Project_MFC.h"
-
+#include "Except1.h"
 #include "MainFrm.h"
 
 #ifdef _DEBUG
@@ -27,6 +27,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
+	ON_MESSAGE(WM_DIS_MSG, &CMainFrame::OnDisMsg)
+	ON_MESSAGE(WM_CLEAR_OUTPUT, &CMainFrame::OnClearOutput)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -405,4 +407,37 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
+}
+
+
+afx_msg LRESULT CMainFrame::OnDisMsg(WPARAM wParam, LPARAM lParam)
+{
+	char* str = (char*)(wParam);
+	CString sstr(str);
+	m_wndOutput.PutOutputInfo(sstr);
+	//UpdateData(FALSE);
+
+	if (str[0] == 'E')
+	{
+		AfxMessageBox(sstr);
+		MyData* pDat = (MyData*)lParam;
+
+		if (pDat)
+			delete pDat;
+		pDat = NULL;
+
+		UINT uExitCode = 0;
+		HANDLE hHadle = GetCurrentProcess();
+		TerminateProcess(GetCurrentProcess(), uExitCode);
+		//SendMessage(WM_CLOSE, 0, 0);
+	}
+
+	return 0;
+}
+
+
+afx_msg LRESULT CMainFrame::OnClearOutput(WPARAM wParam, LPARAM lParam)
+{
+	m_wndOutput.ClearAll();
+	return 0;
 }

@@ -59,6 +59,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnOperateInputdata();
+	virtual void OnInitialUpdate();
 };
 
 #ifndef _DEBUG  // debug version in Project_MFCView.cpp

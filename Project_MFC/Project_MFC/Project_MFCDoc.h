@@ -6,6 +6,7 @@
 #pragma once
 
 #include "MyData.h"
+#include "Except1.h"
 
 class CProjectMFCDoc : public CDocument
 {
@@ -16,6 +17,8 @@ protected: // create from serialization only
 // Attributes
 public:
 	MyData* pDat;
+	CExcept1App* pExcept;
+
 // Operations
 public:
 

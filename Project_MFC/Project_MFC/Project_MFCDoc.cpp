@@ -34,6 +34,7 @@ CProjectMFCDoc::CProjectMFCDoc() noexcept
 {
 	// TODO: add one-time construction code here
 	pDat = NULL;
+	pExcept = GetExceptPtr();
 }
 
 CProjectMFCDoc::~CProjectMFCDoc()
@@ -58,10 +59,11 @@ BOOL CProjectMFCDoc::OnNewDocument()
 	try
 	{
 		pDat = new MyData(1);
+		pExcept->ResetDat(pDat);
 	}
 	catch (std::bad_alloc)
 	{
-		//
+		pExcept->PutMessage(1003);
 	}
 
 	return TRUE;
@@ -81,11 +83,15 @@ void CProjectMFCDoc::Serialize(CArchive& ar)
 		{
 			MyPoint tmp;
 			const int no_it(pDat->size());
+			ar << no_it;
+
 			for (int i = 0; i < no_it; ++i) {
 				tmp = (*pDat)[i].get();
 				ar << tmp.x << tmp.y;
 			}
 		}
+
+		pExcept->PutMessage(1004);
 	}
 	else
 	{
@@ -101,10 +107,11 @@ void CProjectMFCDoc::Serialize(CArchive& ar)
 			try
 			{
 				pDat = new MyData(no_it);
+				pExcept->ResetDat(pDat);
 			}
 			catch (std::bad_alloc)
 			{
-				//
+				pExcept->PutMessage(1003);
 			}
 
 			MyPoint tmp;
@@ -114,6 +121,8 @@ void CProjectMFCDoc::Serialize(CArchive& ar)
 				pDat->Push(tmp);
 			}
 		}
+
+		pExcept->PutMessage(1005);
 	}
 }
 
