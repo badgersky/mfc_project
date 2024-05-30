@@ -23,6 +23,7 @@ CDialogInputData::CDialogInputData(CProjectMFCDoc* pDoc, CWnd* pParent /*=nullpt
 
 CDialogInputData::~CDialogInputData()
 {
+	m_smallImageList.DeleteImageList();
 }
 
 void CDialogInputData::DoDataExchange(CDataExchange* pDX)
@@ -41,6 +42,7 @@ BEGIN_MESSAGE_MAP(CDialogInputData, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_DEL, &CDialogInputData::OnClickedButtonDel)
 	ON_BN_CLICKED(IDOK, &CDialogInputData::OnBnClickedOk)
 	ON_NOTIFY(LVN_ITEMCHANGING, IDC_LIST_CTRL, &CDialogInputData::OnItemchangingListCtrl)
+	ON_BN_CLICKED(IDC_COLOR, &CDialogInputData::OnClickedColor)
 END_MESSAGE_MAP()
 
 
@@ -51,6 +53,8 @@ BOOL CDialogInputData::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  Add extra initialization here
+	VERIFY(m_ColorBox.SubclassDlgItem(IDC_STATIC_COLOR, this));
+
 	CString strx, stry;
 
 	lvi.mask = LVIF_TEXT;
@@ -75,7 +79,7 @@ BOOL CDialogInputData::OnInitDialog()
 	int nFormat = LVCFMT_LEFT;
 	ret = m_ListCtrl.InsertColumn(0, _T("X"), nFormat, column_width, 0);
 	ret = m_ListCtrl.InsertColumn(1, _T("Y"), nFormat, column_width, 1);
-	//ret = m_ListCtrl.InsertColumn(2, "color", nFormat, column_width, 2);
+	ret = m_ListCtrl.InsertColumn(2, _T("color"), nFormat, column_width, 2);
 
 	ASSERT(pDat);
 	int no_item = pDat->size();
@@ -279,9 +283,58 @@ void CDialogInputData::OnItemchangingListCtrl(NMHDR* pNMHDR, LRESULT* pResult)
 		//ret = m_ListCtrl.GetItemText(nItem, ncol, st, sizeof(st));
 		//m_color = atol(st);
 
-		//m_ColorBox.SetItem(nItem);
-		//m_ColorBox.Invalidate();
+		m_ColorBox.SetItem(nItem);
+		m_ColorBox.Invalidate();
 
 		UpdateData(FALSE);
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////// CColorBox
+
+BEGIN_MESSAGE_MAP(CColorBox, CStatic)
+	ON_WM_PAINT()
+END_MESSAGE_MAP()
+
+
+void CColorBox::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+	// TODO: Add your message handler code here
+	// Do not call CDialogEx::OnPaint() for painting messages
+
+	CRect rect;
+	this->GetClientRect(&rect);
+
+	CBrush newbrush;
+	CBrush* oldbrush;
+	newbrush.CreateSolidBrush(color);
+	oldbrush = dc.SelectObject(&newbrush);
+
+	dc.Rectangle(0, 0, (rect.right - rect.left), (rect.bottom - rect.top));
+
+	dc.SelectObject(oldbrush);
+	newbrush.DeleteObject();
+}
+
+void CColorBox::SetItem(int i)
+{
+	COLORREF tab[] = { RGB(0, 0, 0), RGB(255, 0, 0), RGB(0, 255, 0), RGB(0, 0, 255) };
+	int ii = i % (sizeof(tab) / sizeof(tab[0]));
+	color = tab[ii];
+}
+
+void CDialogInputData::OnClickedColor()
+{
+	// TODO: Add your control notification handler code here
+
+	CColorDialog dlg;
+
+	if (dlg.DoModal())
+	{
+		m_ColorBox.SetColor(dlg.GetColor());
+		m_ColorBox.Invalidate();
 	}
 }
