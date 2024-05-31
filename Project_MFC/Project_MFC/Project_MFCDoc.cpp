@@ -16,6 +16,11 @@
 
 #include <iostream>
 
+#include <chrono>
+
+#include <string>
+#include <sstream>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -25,6 +30,7 @@
 IMPLEMENT_DYNCREATE(CProjectMFCDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CProjectMFCDoc, CDocument)
+	ON_COMMAND(ID_FILE_SAVECSV, &CProjectMFCDoc::OnFileSaveCSV)
 END_MESSAGE_MAP()
 
 
@@ -87,7 +93,7 @@ void CProjectMFCDoc::Serialize(CArchive& ar)
 
 			for (int i = 0; i < no_it; ++i) {
 				tmp = (*pDat)[i].get();
-				ar << tmp.x << tmp.y;
+				ar << tmp.x << tmp.y << tmp.color;
 			}
 		}
 
@@ -117,7 +123,7 @@ void CProjectMFCDoc::Serialize(CArchive& ar)
 			MyPoint tmp;
 			for (int i = 0; i < no_it; ++i)
 			{
-				ar >> tmp.x >> tmp.y;
+				ar >> tmp.x >> tmp.y >> tmp.color;
 				pDat->Push(tmp);
 			}
 		}
@@ -196,3 +202,40 @@ void CProjectMFCDoc::Dump(CDumpContext& dc) const
 
 
 // CProjectMFCDoc commands
+
+
+void CProjectMFCDoc::OnFileSaveCSV()
+{
+	const auto clock = std::chrono::system_clock::now();
+	time_t t = clock.time_since_epoch().count();
+	std::stringstream st;
+	st << t;
+	std::string filename = st.str();
+	filename = filename + ".csv";
+
+	std::ofstream myfile(filename);
+	if (!myfile.is_open())
+	{
+		if (pExcept)
+			pExcept->PutMessage(1007);
+		return;
+	}
+
+	myfile << "vertex,x,y,color\n";
+
+	for (int i = 0; i < pDat->size(); ++i)
+	{
+		MyPoint tmp_point = (*pDat)[i];
+		double x = tmp_point.x;
+		double y = tmp_point.y;
+		COLORREF color = tmp_point.color;
+
+		char color_str[8];
+		sprintf_s(color_str, "#%06X", color & 0xFFFFFF);
+
+		myfile << "vertex" << i << "," << x << "," << y << "," << color_str << "\n";
+	}
+
+	myfile.close();
+	pExcept->PutMessage(1006);
+}

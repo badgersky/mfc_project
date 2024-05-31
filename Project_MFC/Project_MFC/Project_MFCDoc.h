@@ -7,6 +7,7 @@
 
 #include "MyData.h"
 #include "Except1.h"
+#include "fstream"
 
 class CProjectMFCDoc : public CDocument
 {
@@ -49,4 +50,6 @@ protected:
 	// Helper function that sets search content for a Search Handler
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
+public:
+	afx_msg void OnFileSaveCSV();
 };

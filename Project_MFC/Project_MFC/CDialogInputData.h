@@ -10,9 +10,9 @@ public:
 	MyData* pDat;
 
 	CColorBox() : pDat(NULL) { color = RGB(255, 255, 255); }
-	void SetData(MyData* pData) { pDat = pData; }
-	void SetItem(int i);
-	void SetColor(COLORREF col) { color = col; }
+	//void SetData(MyData* pData) { pDat = pData; }
+	//void SetItem(int i);
+	void SetColor(COLORREF col) { color = col; Invalidate(); }
 
 protected:
 	DECLARE_MESSAGE_MAP()
@@ -49,11 +49,12 @@ public:
 
 	double m_x;
 	double m_y;
+	CString m_name;
 
+	COLORREF m_color;
 	CColorBox m_ColorBox;
 
 	afx_msg void OnLvnItemchangedListCtrl(NMHDR* pNMHDR, LRESULT* pResult);
-//	afx_msg void OnBnClickedButtonAdd();
 	afx_msg void OnClickedButtonAdd();
 	afx_msg void OnClickedButtonMod();
 	afx_msg void OnClickedButtonDel();
@@ -63,4 +64,5 @@ public:
 	void ModifyData();
 	afx_msg void OnItemchangingListCtrl(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnClickedColor();
+	afx_msg void OnClickedClearAllBtn();
 };

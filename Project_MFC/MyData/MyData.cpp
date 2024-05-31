@@ -41,7 +41,6 @@
 BEGIN_MESSAGE_MAP(CMyDataApp, CWinApp)
 END_MESSAGE_MAP()
 
-
 // CMyDataApp construction
 
 CMyDataApp::CMyDataApp()
@@ -54,7 +53,6 @@ CMyDataApp::CMyDataApp()
 // The one and only CMyDataApp object
 
 CMyDataApp theApp;
-
 
 // CMyDataApp initialization
 
@@ -81,7 +79,7 @@ MyPoint* MyData::allocTab(MyPoint* pTab, int n) {
 	}
 }
 
-MyData::MyData(int no_it)
+MyData::MyData(int no_it) noexcept
 {
 	//pExcept = GetExceptPtr();
 	pTab = NULL;

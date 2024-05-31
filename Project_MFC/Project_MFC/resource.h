@@ -96,10 +96,16 @@
 #define IDC_BUTTON_MOD                  1005
 #define IDS_STRING1005                  1005
 #define IDC_BUTTON_DEL                  1006
-#define IDC_BUTTON1                     1007
+#define IDS_STRING103                   1006
 #define IDC_COLOR                       1007
+#define IDS_STRING1007                  1007
 #define IDC_STATIC_COLOR                1008
+#define IDC_BUTTON1                     1011
+#define IDC_CLEAR_ALL_BTN               1011
+#define IDC_EDIT1                       1012
+#define IDC_EDIT_NAME                   1012
 #define ID_OPERATE_INPUTDATA            32771
+#define ID_FILE_SAVECSV                 32772
 #define AFX_IDS_APP_TITLE               0xE000
 #define AFX_IDS_IDLEMESSAGE             0xE001
 #define ID_FILE_CLOSE                   0xE102
@@ -148,9 +154,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        312
-#define _APS_NEXT_COMMAND_VALUE         32772
-#define _APS_NEXT_CONTROL_VALUE         1009
+#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_COMMAND_VALUE         32773
+#define _APS_NEXT_CONTROL_VALUE         1013
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

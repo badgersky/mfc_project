@@ -133,9 +133,9 @@ void CProjectMFCView::OnDraw(CDC* pDC)
 		Coord.x = (*pDoc->pDat)[ipoint].x;
 		Coord.y = (*pDoc->pDat)[ipoint].y;
 		scr = GetScreenCoord(Coord, mmin, mmax, size1, marg, 1, 1);
-		//MY_POINT point = (*pDoc->pDat)[ipoint];
-		//COLORREF my_color = (*pDoc->pDat)[ipoint].get_color();
-		newbrush.CreateSolidBrush(RGB(120, 120, 120));
+		MyPoint point = (*pDoc->pDat)[ipoint];
+		COLORREF my_color = (*pDoc->pDat)[ipoint].get_color();
+		newbrush.CreateSolidBrush(my_color);
 		oldbrush = pDC->SelectObject(&newbrush);
 		pDC->Ellipse(scr.x + PointRad, scr.y + PointRad, scr.x - PointRad, scr.y - PointRad);
 		pDC->SelectObject(oldbrush);

@@ -8,7 +8,6 @@
 #endif
 
 #include "resource.h" // main symbols
-#include "MyData.h"
 
 // CExcept1App
 // See Except1.cpp for the implementation of this class
@@ -23,6 +22,8 @@
 //+++++++++++++++++++++++++++++++++++++++
 //Uzupelniamy komynikaty Windows swoimi wlasnymi
 #define APP_START_MESSAGE WM_USER+100
+
+class MyData;
 
 enum ITS_APP_MESSAGE
 {
