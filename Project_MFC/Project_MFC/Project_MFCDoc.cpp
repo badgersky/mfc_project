@@ -93,7 +93,7 @@ void CProjectMFCDoc::Serialize(CArchive& ar)
 
 			for (int i = 0; i < no_it; ++i) {
 				tmp = (*pDat)[i].get();
-				ar << tmp.x << tmp.y << tmp.color;
+				ar << tmp.x << tmp.y << tmp.color << tmp.name;
 			}
 		}
 
@@ -123,7 +123,7 @@ void CProjectMFCDoc::Serialize(CArchive& ar)
 			MyPoint tmp;
 			for (int i = 0; i < no_it; ++i)
 			{
-				ar >> tmp.x >> tmp.y >> tmp.color;
+				ar >> tmp.x >> tmp.y >> tmp.color >> tmp.name;
 				pDat->Push(tmp);
 			}
 		}
@@ -221,19 +221,30 @@ void CProjectMFCDoc::OnFileSaveCSV()
 		return;
 	}
 
-	myfile << "vertex,x,y,color\n";
+	myfile << "name,x,y,color\n";
+
+	MyPoint tmp_point;
+	double x;
+	double y;
+	COLORREF color;
+	CString name;
+	
 
 	for (int i = 0; i < pDat->size(); ++i)
 	{
-		MyPoint tmp_point = (*pDat)[i];
-		double x = tmp_point.x;
-		double y = tmp_point.y;
-		COLORREF color = tmp_point.color;
+		tmp_point = (*pDat)[i];
+		x = tmp_point.x;
+		y = tmp_point.y;
+		color = tmp_point.color;
+		name = tmp_point.name;
 
 		char color_str[8];
 		sprintf_s(color_str, "#%06X", color & 0xFFFFFF);
 
-		myfile << "vertex" << i << "," << x << "," << y << "," << color_str << "\n";
+		CT2A asciiName(name);
+		std::string nameStr(asciiName);
+
+		myfile << nameStr << "," << x << "," << y << "," << color_str << "\n";
 	}
 
 	myfile.close();
