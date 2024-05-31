@@ -445,5 +445,7 @@ FodyWeavers.xsd
 *.def
 *.reg
 *.sln
+*.csv
+work
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,c++
