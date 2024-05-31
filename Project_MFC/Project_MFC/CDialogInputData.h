@@ -65,4 +65,5 @@ public:
 	afx_msg void OnItemchangingListCtrl(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnClickedColor();
 	afx_msg void OnClickedClearAllBtn();
+	BOOL my_is_empty(CString text);
 };

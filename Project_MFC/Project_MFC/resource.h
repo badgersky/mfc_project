@@ -102,7 +102,7 @@
 #define IDC_STATIC_COLOR                1008
 #define IDC_BUTTON1                     1011
 #define IDC_CLEAR_ALL_BTN               1011
-#define IDC_EDIT1                       1012
+#define IDC_EDIT_NAME                   1012
 #define IDC_EDIT_NAME                   1012
 #define ID_OPERATE_INPUTDATA            32771
 #define ID_FILE_SAVECSV                 32772

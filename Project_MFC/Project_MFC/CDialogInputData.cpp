@@ -97,7 +97,7 @@ BOOL CDialogInputData::OnInitDialog()
 	{
 		MyPoint pt = (*pDat)[i];
 		lvi.iItem = i;
-		name.Format(_T("%s"), pt.name);
+		name = pt.name;
 		size_t Len = name.GetLength();
 		strx.Format(_T("%le"), pt.x);
 		Len += strx.GetLength();
@@ -139,12 +139,16 @@ void CDialogInputData::OnClickedButtonAdd()
 
 	UpdateData(TRUE);
 
+	if (m_name.IsEmpty() || my_is_empty(m_name)) {
+		m_name = "vertex";
+	}
+
 	tmp.x = m_x;
 	tmp.y = m_y;
 	m_color = m_ColorBox.color;
 	tmp.color = m_color;
 	tmp.name = m_name;
-	name.Format(_T("%s"), m_name);
+	name = m_name;
 	size_t Len = name.GetLength();
 	strx.Format(_T("%le"), m_x);
 	Len += strx.GetLength();
@@ -187,12 +191,16 @@ void CDialogInputData::OnClickedButtonMod()
 
 		UpdateData(TRUE);
 
+		if (m_name.IsEmpty() || my_is_empty(m_name)) {
+			m_name = "vertex";
+		}
+
 		tmp.x = m_x;
 		tmp.y = m_y;
 		m_color = m_ColorBox.color;
 		tmp.color = m_color;
 		tmp.name = m_name;
-		name.Format(_T("%s"), m_name);
+		name = m_name;
 		size_t Len = name.GetLength();
 		strx.Format(_T("%le"), m_x);
 		Len += strx.GetLength();
@@ -201,7 +209,7 @@ void CDialogInputData::OnClickedButtonMod()
 		color.Format(_T("%u"), m_color);
 		Len += color.GetLength();
 
-		//lvi.iItem = nItem;
+		lvi.iItem = nItem;
 		//lvi.pszText = _T(" ");
 		//lvi.cchTextMax = (int)Len;
 		//ret = m_ListCtrl.InsertItem(&lvi);
@@ -262,6 +270,10 @@ void CDialogInputData::ModifyData()
 	{
 		BOOL ret = m_ListCtrl.GetItemText(nItem, 0, st, sizeof(st));
 		tmp.name = st;
+		if (st[0] == _T('\0') || my_is_empty(st))
+		{
+			tmp.name = "vertex";
+		}
 		ret = m_ListCtrl.GetItemText(nItem, 1, st, sizeof(st));
 		tmp.x = _ttof(st);
 		ret = m_ListCtrl.GetItemText(nItem, 2, st, sizeof(st));
@@ -299,6 +311,10 @@ void CDialogInputData::OnItemchangingListCtrl(NMHDR* pNMHDR, LRESULT* pResult)
 		TCHAR st[512];
 		BOOL ret = m_ListCtrl.GetItemText(nItem, ncol, st, sizeof(st));
 		m_name = st;
+		if (st[0] == _T('\0') || my_is_empty(st))
+		{
+			m_name = "vertex";
+		}
 		ncol = 1;
 		ret = m_ListCtrl.GetItemText(nItem, ncol, st, sizeof(st));
 		m_x = _ttof(st);
@@ -377,4 +393,22 @@ void CDialogInputData::OnClickedClearAllBtn()
 	ASSERT_VALID(pDocum);
 	pDocum->SetModifiedFlag();
 	pDocum->UpdateAllViews(NULL);
+}
+
+BOOL CDialogInputData::my_is_empty(CString text)
+{
+	BOOL res = true;
+	WCHAR tmp;
+
+	for (int i = 0; i < text.GetLength(); i++)
+	{
+		tmp = text[i];
+
+		if (tmp != 32 && tmp != 9 && tmp != 10)
+		{
+			res = false;
+		}
+	}
+
+	return res;
 }

@@ -134,7 +134,7 @@ void CProjectMFCView::OnDraw(CDC* pDC)
 		Coord.y = (*pDoc->pDat)[ipoint].y;
 		scr = GetScreenCoord(Coord, mmin, mmax, size1, marg, 1, 1);
 		MyPoint point = (*pDoc->pDat)[ipoint];
-		COLORREF my_color = (*pDoc->pDat)[ipoint].get_color();
+		COLORREF my_color = point.get_color();
 		newbrush.CreateSolidBrush(my_color);
 		oldbrush = pDC->SelectObject(&newbrush);
 		pDC->Ellipse(scr.x + PointRad, scr.y + PointRad, scr.x - PointRad, scr.y - PointRad);
@@ -156,7 +156,7 @@ void CProjectMFCView::OnDraw(CDC* pDC)
 		newpen.DeleteObject();
 
 		//Output text
-		str.Format(_T("vertex %d"), ipoint);
+		str = point.name;
 		pDC->TextOut(scr.x + PointRad + 2, scr.y, str);
 	}
 
