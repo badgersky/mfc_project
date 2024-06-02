@@ -36,6 +36,7 @@ public:
 public:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	void UpdateFont(LOGFONT& logFont);
 protected:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
@@ -60,6 +61,7 @@ protected:
 public:
 	afx_msg void OnOperateInputdata();
 	virtual void OnInitialUpdate();
+	afx_msg void OnOperateGraphwind();
 };
 
 #ifndef _DEBUG  // debug version in Project_MFCView.cpp

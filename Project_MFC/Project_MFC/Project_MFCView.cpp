@@ -18,6 +18,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "CDialogGraphWind.h"
 
 
 // CProjectMFCView
@@ -32,6 +33,7 @@ BEGIN_MESSAGE_MAP(CProjectMFCView, CView)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_OPERATE_INPUTDATA, &CProjectMFCView::OnOperateInputdata)
+	ON_COMMAND(ID_OPERATE_GRAPHWIND, &CProjectMFCView::OnOperateGraphwind)
 END_MESSAGE_MAP()
 
 // CProjectMFCView construction/destruction
@@ -42,9 +44,9 @@ CProjectMFCView::CProjectMFCView() noexcept
     m_scaleX = m_scaleY = 1.0;
     PointRad = 8;
 
-    memset(&lf, 0, sizeof(LOGFONT));       // zero out structure
-    lf.lfHeight = 12;                      // lf.lfHeight = 18 - request a 12-pixel-height font
-    strcpy_s((char*)lf.lfFaceName, sizeof(lf.lfFaceName), "Arial");        // request a face name "Arial"
+	memset(&lf, 0, sizeof(LOGFONT));       // zero out structure
+	lf.lfHeight = 12;                      // lf.lfHeight = 18 - request a 12-pixel-height font
+	strcpy_s((char*)lf.lfFaceName, sizeof(lf.lfFaceName), "Arial");        // request a face name "Arial"
 }
 
 CProjectMFCView::~CProjectMFCView()
@@ -78,94 +80,99 @@ BOOL CProjectMFCView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CProjectMFCView::OnDraw(CDC* pDC)
 {
-	CProjectMFCDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc || !pDoc->pDat || !pDoc->pDat->size())
-		return;
+    CProjectMFCDoc* pDoc = GetDocument();
+    ASSERT_VALID(pDoc);
+    if (!pDoc || !pDoc->pDat || !pDoc->pDat->size())
+        return;
 
-	// TODO: add draw code for native data here
-	//Set mapping mode
-	pDC->SetMapMode(MM_TEXT);
-	pDC->SetGraphicsMode(GM_ADVANCED);
+    // Set mapping mode
+    pDC->SetMapMode(MM_TEXT);
+    pDC->SetGraphicsMode(GM_ADVANCED);
 
-	CString str;
-	TEXTMETRIC tm;
+    CString str;
+    TEXTMETRIC tm;
 
-	CPen newpen;
-	CPen* oldpen;
-	CBrush newbrush;
-	CBrush* oldbrush;
+    CPen newpen;
+    CPen* oldpen;
+    CBrush newbrush;
+    CBrush* oldbrush;
 
-	CPoint scr;					  //screen coordinates;
-	SIZE size1;					 //client rect extension in pixels 
-	SIZE marg = { 80,80 };		//margines in pixels
+    CPoint scr;					  // Screen coordinates
+    SIZE size1;					 // Client rect extension in pixels 
+    SIZE marg = { 80, 80 };		// Margins in pixels
 
-	//set font
-	VERIFY(font.CreateFontIndirect(&lf));
-	CFont* def_font = pDC->SelectObject(&font);
+    // Set font
+    CFont* def_font = nullptr;
+    if (font.GetSafeHandle() != nullptr)  // Check if a new font is set
+    {
+        def_font = pDC->SelectObject(&font);
+    }
 
-	pDC->GetOutputTextMetrics(&tm);
+    pDC->GetOutputTextMetrics(&tm);
 
-	CRect rect;
-	this->GetClientRect(&rect);
+    CRect rect;
+    this->GetClientRect(&rect);
 
-	double max_x, min_x, max_y, min_y;
-	pDoc->pDat->GetMaxMinCoords(max_x, min_x, max_y, min_y);
+    double max_x, min_x, max_y, min_y;
+    pDoc->pDat->GetMaxMinCoords(max_x, min_x, max_y, min_y);
 
-	size1.cx = (long)(m_scaleX * (rect.right - rect.left));
-	size1.cy = (long)(m_scaleY * (rect.bottom - rect.top));
+    size1.cx = static_cast<long>(m_scaleX * (rect.right - rect.left));
+    size1.cy = static_cast<long>(m_scaleY * (rect.bottom - rect.top));
 
-	newbrush.CreateSolidBrush(RGB(250, 250, 250));
-	oldbrush = pDC->SelectObject(&newbrush);
-	pDC->Rectangle(0, 0, (rect.right - rect.left), (rect.bottom - rect.top));
-	pDC->SelectObject(oldbrush);
-	newbrush.DeleteObject();
+    newbrush.CreateSolidBrush(RGB(250, 250, 250));
+    oldbrush = pDC->SelectObject(&newbrush);
+    pDC->Rectangle(0, 0, (rect.right - rect.left), (rect.bottom - rect.top));
+    pDC->SelectObject(oldbrush);
+    newbrush.DeleteObject();
 
-	DCOORD Coord(0, 0), mmin(min_x, min_y), mmax(max_x, max_y);
+    DCOORD Coord(0, 0), mmin(min_x, min_y), mmax(max_x, max_y);
 
-	const int npoints = pDoc->pDat->size();
+    const int npoints = pDoc->pDat->size();
 
-	newpen.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-	oldpen = pDC->SelectObject(&newpen);
+    newpen.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+    oldpen = pDC->SelectObject(&newpen);
 
-	for (int ipoint = 0; ipoint < npoints; ++ipoint)
-	{
-		Coord.x = (*pDoc->pDat)[ipoint].x;
-		Coord.y = (*pDoc->pDat)[ipoint].y;
-		scr = GetScreenCoord(Coord, mmin, mmax, size1, marg, 1, 1);
-		MyPoint point = (*pDoc->pDat)[ipoint];
-		COLORREF my_color = point.get_color();
-		newbrush.CreateSolidBrush(my_color);
-		oldbrush = pDC->SelectObject(&newbrush);
-		pDC->Ellipse(scr.x + PointRad, scr.y + PointRad, scr.x - PointRad, scr.y - PointRad);
-		pDC->SelectObject(oldbrush);
-		newbrush.DeleteObject();
+    for (int ipoint = 0; ipoint < npoints; ++ipoint)
+    {
+        Coord.x = (*pDoc->pDat)[ipoint].x;
+        Coord.y = (*pDoc->pDat)[ipoint].y;
+        scr = GetScreenCoord(Coord, mmin, mmax, size1, marg, 1, 1);
+        MyPoint point = (*pDoc->pDat)[ipoint];
+        COLORREF my_color = point.get_color();
+        newbrush.CreateSolidBrush(my_color);
+        oldbrush = pDC->SelectObject(&newbrush);
+        pDC->Ellipse(scr.x + PointRad, scr.y + PointRad, scr.x - PointRad, scr.y - PointRad);
+        pDC->SelectObject(oldbrush);
+        newbrush.DeleteObject();
 
-		//Draw lines
-		pDC->SelectObject(oldpen);
-		newpen.DeleteObject();
-		newpen.CreatePen(PS_SOLID, 2, RGB(69, 69, 69));
-		oldpen = pDC->SelectObject(&newpen);
+        // Draw lines
+        pDC->SelectObject(oldpen);
+        newpen.DeleteObject();
+        newpen.CreatePen(PS_SOLID, 2, RGB(69, 69, 69));
+        oldpen = pDC->SelectObject(&newpen);
 
-		if (ipoint == 0)
-			pDC->MoveTo(scr);
-		else
-			pDC->LineTo(scr);
+        if (ipoint == 0)
+            pDC->MoveTo(scr);
+        else
+            pDC->LineTo(scr);
 
-		pDC->SelectObject(oldpen);
-		newpen.DeleteObject();
+        pDC->SelectObject(oldpen);
+        newpen.DeleteObject();
 
-		//Output text
-		str = point.name;
-		pDC->TextOut(scr.x + PointRad + 2, scr.y, str);
-	}
+        // Output text
+        str = point.name;
+        pDC->TextOut(scr.x + PointRad + 2, scr.y, str);
+    }
 
-	pDC->SelectObject(oldpen);
-	newpen.DeleteObject();
+    pDC->SelectObject(oldpen);
+    newpen.DeleteObject();
 
-	pDC->SelectObject(def_font);
-	font.DeleteObject();
+    if (def_font)
+    {
+        pDC->SelectObject(def_font);  // Restore the default font
+    }
 }
+
 
 
 // CProjectMFCView printing
@@ -262,4 +269,32 @@ CPoint CProjectMFCView::GetScreenCoord(DCOORD Coord, DCOORD min, DCOORD max, SIZ
     scr.y -= vsbpos * size1.cy / 100;
 
     return scr;
+}
+
+void CProjectMFCView::UpdateFont(LOGFONT& logFont)
+{
+	lf = logFont;  // Store the LOGFONT structure
+
+	// Delete the previous font if it exists
+	if (font.GetSafeHandle() != nullptr)
+	{
+		font.DeleteObject();
+	}
+
+	// Create the new font
+	font.CreateFontIndirect(&logFont);
+
+	// Force the view to redraw with the new font
+	Invalidate();
+	UpdateWindow();
+}
+
+void CProjectMFCView::OnOperateGraphwind()
+{
+	CDialogGraphWind dlg;
+	if (dlg.DoModal() == IDOK)
+	{
+		LOGFONT logFont = dlg.GetLogFont();
+		UpdateFont(logFont);
+	}
 }

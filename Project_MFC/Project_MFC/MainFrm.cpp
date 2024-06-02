@@ -173,6 +173,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	lstBasicCommands.AddTail(ID_SORTING_SORTBYTYPE);
 	lstBasicCommands.AddTail(ID_SORTING_SORTBYACCESS);
 	lstBasicCommands.AddTail(ID_SORTING_GROUPBYTYPE);
+	lstBasicCommands.AddTail(ID_OPERATE_INPUTDATA);
+	lstBasicCommands.AddTail(ID_OPERATE_GRAPHWIND);
+	lstBasicCommands.AddTail(ID_FILE_SAVECSV);
 
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 
