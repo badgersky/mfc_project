@@ -9,6 +9,8 @@ class CDialogGraphWind : public CDialogEx
 	DECLARE_DYNAMIC(CDialogGraphWind)
 
 	LOGFONT m_logFont;
+	int m_combo;
+	CComboBox m_comboCTRL;
 public:
 	CDialogGraphWind(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CDialogGraphWind();
@@ -23,7 +25,10 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	virtual BOOL OnInitDialog();
 	afx_msg void OnClickedButtonFont();
 	afx_msg void OnBnClickedOk();
 	LOGFONT GetLogFont() { return m_logFont; }
+	afx_msg void OnCbnSelchangeComboLines();
+	int GetLineStyle() { return m_combo; }
 };

@@ -16,6 +16,7 @@ public:
 	CProjectMFCDoc* GetDocument() const;
 	CFont font;
 	LOGFONT lf;
+	int line;
 
 	int m_scaleX;
 	int m_scaleY;
@@ -37,6 +38,7 @@ public:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	void UpdateFont(LOGFONT& logFont);
+	void UpdateLine(int num);
 protected:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);

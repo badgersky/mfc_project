@@ -44,9 +44,12 @@ CProjectMFCView::CProjectMFCView() noexcept
     m_scaleX = m_scaleY = 1.0;
     PointRad = 8;
 
-	memset(&lf, 0, sizeof(LOGFONT));       // zero out structure
-	lf.lfHeight = 12;                      // lf.lfHeight = 18 - request a 12-pixel-height font
-	strcpy_s((char*)lf.lfFaceName, sizeof(lf.lfFaceName), "Arial");        // request a face name "Arial"
+    memset(&lf, 0, sizeof(LOGFONT));
+    lf.lfHeight = 12;
+    lf.lfWeight = FW_NORMAL;
+    lstrcpy(lf.lfFaceName, _T("Arial"));
+
+    font.CreateFontIndirect(&lf);
 }
 
 CProjectMFCView::~CProjectMFCView()
@@ -148,7 +151,7 @@ void CProjectMFCView::OnDraw(CDC* pDC)
         // Draw lines
         pDC->SelectObject(oldpen);
         newpen.DeleteObject();
-        newpen.CreatePen(PS_SOLID, 2, RGB(69, 69, 69));
+        newpen.CreatePen(line, 1, RGB(69, 69, 69));
         oldpen = pDC->SelectObject(&newpen);
 
         if (ipoint == 0)
@@ -289,12 +292,21 @@ void CProjectMFCView::UpdateFont(LOGFONT& logFont)
 	UpdateWindow();
 }
 
+void CProjectMFCView::UpdateLine(int num)
+{
+    line = num;
+    Invalidate();
+    UpdateWindow();
+}
+
 void CProjectMFCView::OnOperateGraphwind()
 {
 	CDialogGraphWind dlg;
 	if (dlg.DoModal() == IDOK)
 	{
 		LOGFONT logFont = dlg.GetLogFont();
+        int line_style = dlg.GetLineStyle();
 		UpdateFont(logFont);
+        UpdateLine(line_style);
 	}
 }
