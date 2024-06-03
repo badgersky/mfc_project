@@ -18,6 +18,7 @@ CDialogGraphWind::CDialogGraphWind(CProjectMFCView* view, CWnd* pParent /*nullpt
 	m_combo = view->line;
 	m_radius = view->radius;
 	m_colorCTRL.SetColor(view->color);
+	reset = false;
 }
 
 CDialogGraphWind::~CDialogGraphWind()
@@ -33,6 +34,7 @@ void CDialogGraphWind::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_RADIUS, m_radius);
 	DDV_MinMaxInt(pDX, m_radius, 0, INT_MAX);
 	DDX_Control(pDX, IDC_MFCCOLORBUTTON, m_colorCTRL);
+	DDX_Control(pDX, IDC_EDIT_RADIUS, m_radiusCTRL);
 }
 
 
@@ -41,6 +43,7 @@ BEGIN_MESSAGE_MAP(CDialogGraphWind, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CDialogGraphWind::OnBnClickedOk)
 	ON_CBN_SELCHANGE(IDC_COMBO_LINES, &CDialogGraphWind::OnCbnSelchangeComboLines)
 	ON_BN_CLICKED(IDC_MFCCOLORBUTTON, &CDialogGraphWind::OnClickedMfccolorbutton)
+	ON_BN_CLICKED(IDC_BUTTON_RESET, &CDialogGraphWind::OnClickedButtonReset)
 END_MESSAGE_MAP()
 
 
@@ -70,6 +73,8 @@ void CDialogGraphWind::OnClickedButtonFont()
 	{
 		dlg.GetCurrentFont(&m_logFont);
 	}
+
+	reset = false;
 }
 
 
@@ -83,6 +88,7 @@ void CDialogGraphWind::OnBnClickedOk()
 void CDialogGraphWind::OnCbnSelchangeComboLines()
 {
 	UpdateData(TRUE);
+	reset = false;
 }
 
 
@@ -97,6 +103,7 @@ void CDialogGraphWind::OnChangeEditRadius()
 	UpdateData(TRUE);
 
 	if (!m_radius) m_radius = 6;
+	reset = false;
 }
 
 
@@ -104,4 +111,23 @@ void CDialogGraphWind::OnClickedMfccolorbutton()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
+	reset = false;
+}
+
+
+void CDialogGraphWind::OnClickedButtonReset()
+{
+	// TODO: Add your control notification handler code here
+	m_combo = 0;
+	m_radius = 6;
+
+	m_colorCTRL.SetColor(RGB(69, 69, 69));
+	m_comboCTRL.SetCurSel(m_combo);
+
+	memset(&m_logFont, 0, sizeof(LOGFONT));
+	m_logFont.lfHeight = 12;
+	m_logFont.lfWeight = FW_NORMAL;
+	lstrcpy(m_logFont.lfFaceName, _T("Arial"));
+
+	reset = true;
 }

@@ -333,6 +333,11 @@ void CProjectMFCView::OnOperateGraphwind()
 
         changed = true;
 
+        if (dlg.didReset()) {
+            changed = false;
+            radius = 6;
+        }
+
         Invalidate();
         UpdateWindow();
 	}

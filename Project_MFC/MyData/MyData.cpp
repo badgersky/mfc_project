@@ -75,7 +75,7 @@ MyPoint* MyData::allocTab(MyPoint* pTab, int n) {
 	}
 	catch (std::bad_alloc)
 	{
-		//pExcept->PutMessage(1003);
+		pExcept->PutMessage(1003);
 	}
 }
 

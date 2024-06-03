@@ -104,6 +104,7 @@ void CProjectMFCDoc::Serialize(CArchive& ar)
 		// TODO: add loading code here
 		if (pDat)
 			delete pDat;
+			pDat = NULL;
 
 		int no_it(0);
 		ar >> no_it;
@@ -127,7 +128,18 @@ void CProjectMFCDoc::Serialize(CArchive& ar)
 				pDat->Push(tmp);
 			}
 		}
-
+		else 
+		{
+			try
+			{
+				pDat = new MyData(no_it);
+				pExcept->ResetDat(pDat);
+			}
+			catch (std::bad_alloc)
+			{
+				pExcept->PutMessage(1003);
+			}
+		}
 		pExcept->PutMessage(1005);
 	}
 }

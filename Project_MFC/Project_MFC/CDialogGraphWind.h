@@ -14,6 +14,8 @@ class CDialogGraphWind : public CDialogEx
 	CComboBox m_comboCTRL;
 	int m_radius;
 	CMFCColorButton m_colorCTRL;
+	BOOL reset;
+	CEdit m_radiusCTRL;
 public:
 	CDialogGraphWind(CProjectMFCView* view, CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CDialogGraphWind();
@@ -29,6 +31,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
+	BOOL didReset() { return reset; }
 	afx_msg void OnClickedButtonFont();
 	afx_msg void OnBnClickedOk();
 	LOGFONT GetLogFont() { return m_logFont; }
@@ -38,4 +41,5 @@ public:
 	COLORREF GetColor() { return m_colorCTRL.GetColor(); }
 	afx_msg void OnChangeEditRadius();
 	afx_msg void OnClickedMfccolorbutton();
+	afx_msg void OnClickedButtonReset();
 };
