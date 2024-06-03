@@ -2,6 +2,7 @@
 #include "afxdialogex.h"
 #include "Project_MFCDoc.h"
 #include "MyData.h"
+#include "Except1.h"
 
 class CColorBox : public CStatic
 {
@@ -38,6 +39,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
+	CExcept1App* pExcept;
 	DECLARE_MESSAGE_MAP()
 public:
 	CListCtrl m_ListCtrl;

@@ -19,6 +19,7 @@ CDialogGraphWind::CDialogGraphWind(CProjectMFCView* view, CWnd* pParent /*nullpt
 	m_radius = view->radius;
 	m_colorCTRL.SetColor(view->color);
 	reset = false;
+	pExcept = GetExceptPtr();
 }
 
 CDialogGraphWind::~CDialogGraphWind()
@@ -62,7 +63,6 @@ BOOL CDialogGraphWind::OnInitDialog()
 	m_comboCTRL.AddString(_T("null"));
 
 	m_comboCTRL.SetCurSel(m_combo);
-
 	return TRUE;
 }
 
@@ -75,6 +75,7 @@ void CDialogGraphWind::OnClickedButtonFont()
 	}
 
 	reset = false;
+	pExcept->PutMessage(1013);
 }
 
 
@@ -82,6 +83,7 @@ void CDialogGraphWind::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	CDialogEx::OnOK();
+	pExcept->PutMessage(1011);
 }
 
 
@@ -89,6 +91,7 @@ void CDialogGraphWind::OnCbnSelchangeComboLines()
 {
 	UpdateData(TRUE);
 	reset = false;
+	pExcept->PutMessage(1017);
 }
 
 
@@ -104,6 +107,7 @@ void CDialogGraphWind::OnChangeEditRadius()
 
 	if (!m_radius) m_radius = 6;
 	reset = false;
+	pExcept->PutMessage(1015);
 }
 
 
@@ -112,6 +116,7 @@ void CDialogGraphWind::OnClickedMfccolorbutton()
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 	reset = false;
+	pExcept->PutMessage(1014);
 }
 
 
@@ -130,4 +135,5 @@ void CDialogGraphWind::OnClickedButtonReset()
 	lstrcpy(m_logFont.lfFaceName, _T("Arial"));
 
 	reset = true;
+	pExcept->PutMessage(1016);
 }

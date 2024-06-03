@@ -22,6 +22,7 @@ CDialogInputData::CDialogInputData(CProjectMFCDoc* pDoc, CWnd* pParent /*=nullpt
 	memset((void*)&lvi, 0, sizeof(LVITEMA));
 	pDat = pDocum->pDat;
 	m_color = RGB(0, 0, 0);
+	pExcept = GetExceptPtr();
 }
 
 CDialogInputData::~CDialogInputData()
@@ -179,6 +180,8 @@ void CDialogInputData::OnClickedButtonAdd()
 	ASSERT_VALID(pDocum);
 	pDocum->SetModifiedFlag();
 	pDocum->UpdateAllViews(NULL);
+
+	pExcept->PutMessage(1008);
 }
 
 
@@ -229,6 +232,7 @@ void CDialogInputData::OnClickedButtonMod()
 		UpdateData(FALSE);
 
 		ModifyData();
+		pExcept->PutMessage(1009);
 	}
 }
 
@@ -249,6 +253,7 @@ void CDialogInputData::OnClickedButtonDel()
 	ASSERT_VALID(pDocum);
 	pDocum->SetModifiedFlag();
 	pDocum->UpdateAllViews(NULL);
+	pExcept->PutMessage(1010);
 }
 
 
@@ -258,6 +263,7 @@ void CDialogInputData::OnBnClickedOk()
 	CDialogEx::OnOK();
 
 	ModifyData();
+	pExcept->PutMessage(1011);
 }
 
 
@@ -386,6 +392,8 @@ void CDialogInputData::OnClickedColor()
 		m_ColorBox.SetColor(dlg.GetColor());
 		m_ColorBox.Invalidate();
 	}
+
+	pExcept->PutMessage(1018);
 }
 
 void CDialogInputData::OnClickedClearAllBtn()
@@ -401,6 +409,7 @@ void CDialogInputData::OnClickedClearAllBtn()
 	ASSERT_VALID(pDocum);
 	pDocum->SetModifiedFlag();
 	pDocum->UpdateAllViews(NULL);
+	pExcept->PutMessage(1012);
 }
 
 BOOL CDialogInputData::my_is_empty(CString text)
@@ -427,7 +436,7 @@ void CDialogInputData::OnClickedButtonFind()
 	UpdateData(TRUE);
 
 	MyPoint* start = &(*pDat)[0];
-	MyPoint* stop = &(*pDat)[pDat->size() - 1];
+	MyPoint* stop = &(*pDat)[pDat->size()];
 	MyPoint* found = pDat->find(start, stop, m_find_name);
 
 	if (found) {

@@ -1,6 +1,7 @@
 #pragma once
 #include "afxdialogex.h"
 #include "Project_MFCView.h"
+#include "Except1.h"
 
 
 // CDialogGraphWind dialog
@@ -26,6 +27,7 @@ public:
 #endif
 
 protected:
+	CExcept1App* pExcept;
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
