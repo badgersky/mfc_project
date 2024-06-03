@@ -66,6 +66,9 @@ public:
 	void clear() { last = 0; }
 	void MyData::GetMaxMinCoords(double& max_x, double& min_x, double& max_y, double& min_y);
 
+	template <class T, class Key>
+	T* find(const T* p_begin, const T* p_end, const Key& k);
+
 	CExcept1App* pExcept;
 
 	MyPoint& operator [] (const int i) {

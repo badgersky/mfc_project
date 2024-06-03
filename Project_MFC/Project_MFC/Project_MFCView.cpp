@@ -42,7 +42,12 @@ CProjectMFCView::CProjectMFCView() noexcept
 {
 	// TODO: add construction code here
     m_scaleX = m_scaleY = 1.0;
-    PointRad = 8;
+
+    line = 0;
+    radius = 6;
+    color = RGB(69, 69, 69);
+
+    changed = false;
 
     memset(&lf, 0, sizeof(LOGFONT));
     lf.lfHeight = 12;
@@ -141,10 +146,18 @@ void CProjectMFCView::OnDraw(CDC* pDC)
         Coord.y = (*pDoc->pDat)[ipoint].y;
         scr = GetScreenCoord(Coord, mmin, mmax, size1, marg, 1, 1);
         MyPoint point = (*pDoc->pDat)[ipoint];
-        COLORREF my_color = point.get_color();
-        newbrush.CreateSolidBrush(my_color);
+        COLORREF color2;
+        if (!changed)
+        {
+            color2 = point.get_color();
+        }
+        else 
+        {
+            color2 = color;
+        }
+        newbrush.CreateSolidBrush(color2);
         oldbrush = pDC->SelectObject(&newbrush);
-        pDC->Ellipse(scr.x + PointRad, scr.y + PointRad, scr.x - PointRad, scr.y - PointRad);
+        pDC->Ellipse(scr.x + radius, scr.y + radius, scr.x - radius, scr.y - radius);
         pDC->SelectObject(oldbrush);
         newbrush.DeleteObject();
 
@@ -164,7 +177,7 @@ void CProjectMFCView::OnDraw(CDC* pDC)
 
         // Output text
         str = point.name;
-        pDC->TextOut(scr.x + PointRad + 2, scr.y, str);
+        pDC->TextOut(scr.x + radius + 2, scr.y, str);
     }
 
     pDC->SelectObject(oldpen);
@@ -276,37 +289,51 @@ CPoint CProjectMFCView::GetScreenCoord(DCOORD Coord, DCOORD min, DCOORD max, SIZ
 
 void CProjectMFCView::UpdateFont(LOGFONT& logFont)
 {
-	lf = logFont;  // Store the LOGFONT structure
+	lf = logFont;
 
-	// Delete the previous font if it exists
 	if (font.GetSafeHandle() != nullptr)
 	{
 		font.DeleteObject();
 	}
 
-	// Create the new font
 	font.CreateFontIndirect(&logFont);
-
-	// Force the view to redraw with the new font
-	Invalidate();
-	UpdateWindow();
 }
 
 void CProjectMFCView::UpdateLine(int num)
 {
     line = num;
-    Invalidate();
-    UpdateWindow();
+}
+
+void CProjectMFCView::UpdateRadius(int num)
+{
+    radius = num;
+}
+
+void CProjectMFCView::UpdateColor(COLORREF colorx)
+{
+    color = colorx;
+  
 }
 
 void CProjectMFCView::OnOperateGraphwind()
 {
-	CDialogGraphWind dlg;
+	CDialogGraphWind dlg(this);
+
 	if (dlg.DoModal() == IDOK)
 	{
 		LOGFONT logFont = dlg.GetLogFont();
         int line_style = dlg.GetLineStyle();
+        int new_radius = dlg.GetRadius();
+        COLORREF new_color = dlg.GetColor();
+
 		UpdateFont(logFont);
         UpdateLine(line_style);
+        UpdateRadius(new_radius);
+        UpdateColor(new_color);
+
+        changed = true;
+
+        Invalidate();
+        UpdateWindow();
 	}
 }

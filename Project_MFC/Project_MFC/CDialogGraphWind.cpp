@@ -11,10 +11,13 @@
 
 IMPLEMENT_DYNAMIC(CDialogGraphWind, CDialogEx)
 
-CDialogGraphWind::CDialogGraphWind(CWnd* pParent /*=nullptr*/)
+CDialogGraphWind::CDialogGraphWind(CProjectMFCView* view, CWnd* pParent /*nullptr*/)
 	: CDialogEx(IDD_DIALOG_GRAPH_WIND, pParent)
-	, m_combo(0)
 {
+	m_logFont = view->lf;
+	m_combo = view->line;
+	m_radius = view->radius;
+	m_colorCTRL.SetColor(view->color);
 }
 
 CDialogGraphWind::~CDialogGraphWind()
@@ -27,6 +30,9 @@ void CDialogGraphWind::DoDataExchange(CDataExchange* pDX)
 	DDX_CBIndex(pDX, IDC_COMBO_LINES, m_combo);
 	DDV_MinMaxInt(pDX, m_combo, 0, 5);
 	DDX_Control(pDX, IDC_COMBO_LINES, m_comboCTRL);
+	DDX_Text(pDX, IDC_EDIT_RADIUS, m_radius);
+	DDV_MinMaxInt(pDX, m_radius, 0, INT_MAX);
+	DDX_Control(pDX, IDC_MFCCOLORBUTTON, m_colorCTRL);
 }
 
 
@@ -34,6 +40,7 @@ BEGIN_MESSAGE_MAP(CDialogGraphWind, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_FONT, &CDialogGraphWind::OnClickedButtonFont)
 	ON_BN_CLICKED(IDOK, &CDialogGraphWind::OnBnClickedOk)
 	ON_CBN_SELCHANGE(IDC_COMBO_LINES, &CDialogGraphWind::OnCbnSelchangeComboLines)
+	ON_BN_CLICKED(IDC_MFCCOLORBUTTON, &CDialogGraphWind::OnClickedMfccolorbutton)
 END_MESSAGE_MAP()
 
 
@@ -51,13 +58,7 @@ BOOL CDialogGraphWind::OnInitDialog()
 	m_comboCTRL.AddString(_T("dash-dot-dot"));
 	m_comboCTRL.AddString(_T("null"));
 
-	m_comboCTRL.SetCurSel(0);
-
-	// default font
-	memset(&m_logFont, 0, sizeof(LOGFONT));
-	m_logFont.lfHeight = 12;
-	m_logFont.lfWeight = FW_NORMAL;
-	lstrcpy(m_logFont.lfFaceName, _T("Arial"));
+	m_comboCTRL.SetCurSel(m_combo);
 
 	return TRUE;
 }
@@ -81,5 +82,26 @@ void CDialogGraphWind::OnBnClickedOk()
 
 void CDialogGraphWind::OnCbnSelchangeComboLines()
 {
+	UpdateData(TRUE);
+}
+
+
+void CDialogGraphWind::OnChangeEditRadius()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+	UpdateData(TRUE);
+
+	if (!m_radius) m_radius = 6;
+}
+
+
+void CDialogGraphWind::OnClickedMfccolorbutton()
+{
+	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "afxdialogex.h"
+#include "Project_MFCView.h"
 
 
 // CDialogGraphWind dialog
@@ -11,8 +12,10 @@ class CDialogGraphWind : public CDialogEx
 	LOGFONT m_logFont;
 	int m_combo;
 	CComboBox m_comboCTRL;
+	int m_radius;
+	CMFCColorButton m_colorCTRL;
 public:
-	CDialogGraphWind(CWnd* pParent = nullptr);   // standard constructor
+	CDialogGraphWind(CProjectMFCView* view, CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CDialogGraphWind();
 
 	// Dialog Data
@@ -31,4 +34,8 @@ public:
 	LOGFONT GetLogFont() { return m_logFont; }
 	afx_msg void OnCbnSelchangeComboLines();
 	int GetLineStyle() { return m_combo; }
+	int GetRadius() { return m_radius; }
+	COLORREF GetColor() { return m_colorCTRL.GetColor(); }
+	afx_msg void OnChangeEditRadius();
+	afx_msg void OnClickedMfccolorbutton();
 };

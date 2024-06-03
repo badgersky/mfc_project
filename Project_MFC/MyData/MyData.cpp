@@ -148,3 +148,13 @@ void MyData::GetMaxMinCoords(double& max_x, double& min_x, double& max_y, double
 		}
 	}
 }
+
+template <class T, class Key>
+T* find(const T* p_begin, const T* p_end, const Key& k) {
+	for (const T* tmp = p_begin; tmp != p_end; ++tmp) {
+		if (tmp->name == k) {
+			return tmp;
+		}
+	}
+	return NULL;
+}

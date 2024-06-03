@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Project_MFCDoc.h"
 
 
 class CProjectMFCView : public CView
@@ -17,10 +18,13 @@ public:
 	CFont font;
 	LOGFONT lf;
 	int line;
+	int radius;
+	COLORREF color;
+
+	BOOL changed;
 
 	int m_scaleX;
 	int m_scaleY;
-	int PointRad;
 
 	struct DCOORD
 	{
@@ -39,6 +43,8 @@ public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	void UpdateFont(LOGFONT& logFont);
 	void UpdateLine(int num);
+	void UpdateRadius(int num);
+	void UpdateColor(COLORREF colorx);
 protected:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
