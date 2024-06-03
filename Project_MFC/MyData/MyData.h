@@ -77,3 +77,16 @@ public:
 private:
 	MyPoint* allocTab(MyPoint* pTab, int n);
 };
+
+template<class T, class Key>
+inline T* MyData::find(const T* p_begin, const T* p_end, const Key& k)
+{
+	CString tmp_name;
+	for (const T* tmp = p_begin; tmp != p_end; tmp++) {
+		tmp_name = tmp->name;
+		if (tmp_name == k) {
+			return const_cast<T*>(tmp);
+		}
+	}
+	return NULL;
+}

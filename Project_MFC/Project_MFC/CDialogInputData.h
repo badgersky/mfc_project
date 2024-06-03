@@ -66,4 +66,6 @@ public:
 	afx_msg void OnClickedColor();
 	afx_msg void OnClickedClearAllBtn();
 	BOOL my_is_empty(CString text);
+	CString m_find_name;
+	afx_msg void OnClickedButtonFind();
 };

@@ -16,6 +16,7 @@ CDialogInputData::CDialogInputData(CProjectMFCDoc* pDoc, CWnd* pParent /*=nullpt
 	, m_x(0)
 	, m_y(0)
 	, m_name(_T(""))
+	, m_find_name(_T(""))
 {
 	pDocum = pDoc;
 	memset((void*)&lvi, 0, sizeof(LVITEMA));
@@ -36,6 +37,8 @@ void CDialogInputData::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_Y, m_y);
 	DDX_Text(pDX, IDC_EDIT_NAME, m_name);
 	DDV_MaxChars(pDX, m_name, 50);
+	DDX_Text(pDX, IDC_FIND_ITEM, m_find_name);
+	DDV_MaxChars(pDX, m_find_name, 50);
 }
 
 
@@ -48,6 +51,7 @@ BEGIN_MESSAGE_MAP(CDialogInputData, CDialogEx)
 	ON_NOTIFY(LVN_ITEMCHANGING, IDC_LIST_CTRL, &CDialogInputData::OnItemchangingListCtrl)
 	ON_BN_CLICKED(IDC_COLOR, &CDialogInputData::OnClickedColor)
 	ON_BN_CLICKED(IDC_CLEAR_ALL_BTN, &CDialogInputData::OnClickedClearAllBtn)
+	ON_BN_CLICKED(IDC_BUTTON_FIND, &CDialogInputData::OnClickedButtonFind)
 END_MESSAGE_MAP()
 
 
@@ -56,6 +60,9 @@ END_MESSAGE_MAP()
 BOOL CDialogInputData::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	// highlighting selected rows
+	m_ListCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT);
 
 	// TODO:  Add extra initialization here
 	VERIFY(m_ColorBox.SubclassDlgItem(IDC_STATIC_COLOR, this));
@@ -109,6 +116,7 @@ BOOL CDialogInputData::OnInitDialog()
 		lvi.pszText = _T(" ");
 		lvi.cchTextMax = Len;
 		ret = m_ListCtrl.InsertItem(&lvi);
+
 		m_ListCtrl.SetItemText(lvi.iItem, 0, name);
 		m_ListCtrl.SetItemText(lvi.iItem, 1, strx);
 		m_ListCtrl.SetItemText(lvi.iItem, 2, stry);
@@ -411,4 +419,23 @@ BOOL CDialogInputData::my_is_empty(CString text)
 	}
 
 	return res;
+}
+
+
+void CDialogInputData::OnClickedButtonFind()
+{
+	UpdateData(TRUE);
+
+	MyPoint* start = &(*pDat)[0];
+	MyPoint* stop = &(*pDat)[pDat->size() - 1];
+	MyPoint* found = pDat->find(start, stop, m_find_name);
+
+	if (found) {
+		CString message;
+		message.Format(_T("Point found:\nName: %s\nX: %lf\nY: %lf\n"), found->name, found->x, found->y);
+		AfxMessageBox(message);
+	}
+	else {
+		AfxMessageBox(_T("Point not found"));
+	}
 }

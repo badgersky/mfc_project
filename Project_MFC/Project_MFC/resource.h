@@ -107,8 +107,10 @@
 #define IDC_EDIT_NAME                   1012
 #define IDC_COMBO_LINES                 1015
 #define IDC_EDIT_RADIUS                 1016
-#define IDC_MFCCOLORBUTTON1             1017
 #define IDC_MFCCOLORBUTTON              1017
+#define IDC_FIND_ITEM                   1018
+#define IDC_BUTTON2                     1019
+#define IDC_BUTTON_FIND                 1019
 #define ID_OPERATE_INPUTDATA            32771
 #define ID_FILE_SAVECSV                 32772
 #define ID_OPERATE_GRAPHWIND            32773
@@ -162,7 +164,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        317
 #define _APS_NEXT_COMMAND_VALUE         32774
-#define _APS_NEXT_CONTROL_VALUE         1018
+#define _APS_NEXT_CONTROL_VALUE         1020
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif
