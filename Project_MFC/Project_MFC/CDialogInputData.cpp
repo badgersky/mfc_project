@@ -432,8 +432,22 @@ void CDialogInputData::OnClickedButtonFind()
 
 	if (found) {
 		CString message;
-		message.Format(_T("Point found:\nName: %s\nX: %lf\nY: %lf\n"), found->name, found->x, found->y);
-		AfxMessageBox(message);
+
+		for (int i = 0; i < m_ListCtrl.GetItemCount(); ++i) {
+			m_ListCtrl.SetItemState(i, 0, LVIS_SELECTED | LVIS_FOCUSED);
+		}
+
+		int index = found - &(*pDat)[0];
+		// Set focus on and select the found item in the list control
+		m_ListCtrl.SetItemState(index, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
+		m_ListCtrl.EnsureVisible(index, FALSE);
+
+		// Highlight the selected item
+		m_ListCtrl.SetSelectionMark(index);
+		m_ListCtrl.SetFocus();
+		m_ListCtrl.RedrawItems(index, index);
+		//message.Format(_T("Point found:\nName: %s\nX: %lf\nY: %lf\n"), found->name, found->x, found->y);
+		//AfxMessageBox(message);
 	}
 	else {
 		AfxMessageBox(_T("Point not found"));
