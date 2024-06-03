@@ -329,9 +329,12 @@ void CProjectMFCView::OnOperateGraphwind()
 		UpdateFont(logFont);
         UpdateLine(line_style);
         UpdateRadius(new_radius);
-        UpdateColor(new_color);
+        BOOL lol = dlg.didColorChange();
 
-        changed = true;
+        if (dlg.didColorChange()) {
+            UpdateColor(new_color);
+            changed = true;
+        }
 
         if (dlg.didReset()) {
             changed = false;

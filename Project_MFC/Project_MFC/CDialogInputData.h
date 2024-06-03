@@ -41,6 +41,7 @@ protected:
 
 	CExcept1App* pExcept;
 	DECLARE_MESSAGE_MAP()
+	BOOL modified;
 public:
 	CListCtrl m_ListCtrl;
 	LV_ITEM lvi;

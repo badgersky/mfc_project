@@ -16,6 +16,7 @@ class CDialogGraphWind : public CDialogEx
 	int m_radius;
 	CMFCColorButton m_colorCTRL;
 	BOOL reset;
+	BOOL color_changed;
 	CEdit m_radiusCTRL;
 public:
 	CDialogGraphWind(CProjectMFCView* view, CWnd* pParent = nullptr);   // standard constructor
@@ -33,6 +34,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
+	BOOL didColorChange() { return color_changed; }
 	BOOL didReset() { return reset; }
 	afx_msg void OnClickedButtonFont();
 	afx_msg void OnBnClickedOk();

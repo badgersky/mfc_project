@@ -19,6 +19,7 @@ CDialogGraphWind::CDialogGraphWind(CProjectMFCView* view, CWnd* pParent /*nullpt
 	m_radius = view->radius;
 	m_colorCTRL.SetColor(view->color);
 	reset = false;
+	color_changed = false;
 	pExcept = GetExceptPtr();
 }
 
@@ -116,6 +117,7 @@ void CDialogGraphWind::OnClickedMfccolorbutton()
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 	reset = false;
+	color_changed = true;
 	pExcept->PutMessage(1014);
 }
 

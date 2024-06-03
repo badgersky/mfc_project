@@ -23,6 +23,7 @@ CDialogInputData::CDialogInputData(CProjectMFCDoc* pDoc, CWnd* pParent /*=nullpt
 	pDat = pDocum->pDat;
 	m_color = RGB(0, 0, 0);
 	pExcept = GetExceptPtr();
+	modified = false;
 }
 
 CDialogInputData::~CDialogInputData()
@@ -180,7 +181,7 @@ void CDialogInputData::OnClickedButtonAdd()
 	ASSERT_VALID(pDocum);
 	pDocum->SetModifiedFlag();
 	pDocum->UpdateAllViews(NULL);
-
+	modified = true;
 	pExcept->PutMessage(1008);
 }
 
@@ -253,6 +254,7 @@ void CDialogInputData::OnClickedButtonDel()
 	ASSERT_VALID(pDocum);
 	pDocum->SetModifiedFlag();
 	pDocum->UpdateAllViews(NULL);
+	modified = true;
 	pExcept->PutMessage(1010);
 }
 
@@ -303,6 +305,7 @@ void CDialogInputData::ModifyData()
 	ASSERT_VALID(pDocum);
 	pDocum->SetModifiedFlag();
 	pDocum->UpdateAllViews(NULL);
+	modified = true;
 }
 
 
@@ -435,26 +438,33 @@ void CDialogInputData::OnClickedButtonFind()
 {
 	UpdateData(TRUE);
 
-	MyPoint* start = &(*pDat)[0];
-	MyPoint* stop = &(*pDat)[pDat->size()];
-	MyPoint* found = pDat->find(start, stop, m_find_name);
-
-	if (found) {
-		CString message;
-
-		for (int i = 0; i < m_ListCtrl.GetItemCount(); ++i) {
-			m_ListCtrl.SetItemState(i, 0, LVIS_SELECTED | LVIS_FOCUSED);
-		}
-
-		int index = found - &(*pDat)[0];
-		m_ListCtrl.SetItemState(index, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
-		m_ListCtrl.EnsureVisible(index, FALSE);
-
-		m_ListCtrl.SetSelectionMark(index);
-		m_ListCtrl.SetFocus();
-		m_ListCtrl.RedrawItems(index, index);
+	if (modified)
+	{
+		AfxMessageBox(_T("Confirm changes first!"));
 	}
-	else {
-		AfxMessageBox(_T("Point not found"));
+	else
+	{
+		MyPoint* start = &(*pDat)[0];
+		MyPoint* stop = &(*pDat)[pDat->size()];
+		MyPoint* found = pDat->find(start, stop, m_find_name);
+
+		if (found) {
+			CString message;
+
+			for (int i = 0; i < m_ListCtrl.GetItemCount(); ++i) {
+				m_ListCtrl.SetItemState(i, 0, LVIS_SELECTED | LVIS_FOCUSED);
+			}
+
+			int index = found - &(*pDat)[0];
+			m_ListCtrl.SetItemState(index, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
+			m_ListCtrl.EnsureVisible(index, FALSE);
+
+			m_ListCtrl.SetSelectionMark(index);
+			m_ListCtrl.SetFocus();
+			m_ListCtrl.RedrawItems(index, index);
+		}
+		else {
+			AfxMessageBox(_T("Point not found"));
+		}
 	}
 }
